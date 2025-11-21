@@ -1,28 +1,41 @@
-import React from "react";
+"use client";
+import React, { useEffect, useState } from "react";
 
-async function fetchGmail() {
-  const baseUrl = process.env.NEXTAUTH_URL; // e.g., http://localhost:3000 in dev
-  const res = await fetch(`${baseUrl}/api/gmail`, { cache: "no-store" });
+export default function GmailPage() {
+  const [messages, setMessages] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
 
-  if (!res.ok) {
-    const error = await res.json();
-    throw new Error(error.error || "Failed to fetch emails");
-  }
+  useEffect(() => {
+    async function fetchGmail() {
+      try {
+        // 1️⃣ Get last 10 message IDs
+        const res = await fetch("/api/business/gmail", { cache: "no-store" });
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.error || "Failed to fetch emails");
 
-  return res.json();
-}
+        // 2️⃣ Get details for each message
+        const messagesWithDetails = await Promise.all(
+          (data.messages || []).map(async (msg) => {
+            const resDetails = await fetch(`/api/business/gmail/${msg.id}`, { cache: "no-store" });
+            return await resDetails.json();
+          })
+        );
 
-export default async function GmailPage() {
-  let data;
-  try {
-    data = await fetchGmail();
-  } catch (err) {
-    return <p className="text-red-500">Error: {err.message}</p>;
-  }
+        setMessages(messagesWithDetails);
+      } catch (err) {
+        setError(err.message);
+      } finally {
+        setLoading(false);
+      }
+    }
 
-  const messages = data.messages || [];
+    fetchGmail();
+  }, []);
 
-  if (messages.length === 0) return <p>No emails found.</p>;
+  if (loading) return <p>Loading Gmail messages...</p>;
+  if (error) return <p className="text-red-500">Error: {error}</p>;
+  if (!messages.length) return <p>No emails found.</p>;
 
   return (
     <div className="p-6">
