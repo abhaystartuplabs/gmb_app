@@ -1,11 +1,14 @@
 import React from "react";
 
 async function fetchGmail() {
-  const res = await fetch("/api/gmail", { cache: "no-store" }); // SSR fetch
+  const baseUrl = process.env.NEXTAUTH_URL; // e.g., http://localhost:3000 in dev
+  const res = await fetch(`${baseUrl}/api/gmail`, { cache: "no-store" });
+
   if (!res.ok) {
     const error = await res.json();
     throw new Error(error.error || "Failed to fetch emails");
   }
+
   return res.json();
 }
 
