@@ -18,7 +18,7 @@ export default function GmailPage() {
         // Fetch details for each message
         const messagesWithDetails = await Promise.all(
           (data.messages || []).map(async (msg) => {
-            const resDetails = await fetch(`/api/business/gmail/${msg.id}`, { cache: "no-store" });
+            const resDetails = await fetch(`/api/business/gmail/${msg.threadId}`, { cache: "no-store" });
             return await resDetails.json();
           })
         );
