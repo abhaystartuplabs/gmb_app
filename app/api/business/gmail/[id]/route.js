@@ -24,6 +24,8 @@ export async function GET(req, { params }) {
 
     const data = await res.json();
 
+    console.log("Single Email:-",data)
+
     const headers = data.payload?.headers || [];
     const from = headers.find((h) => h.name === "From")?.value || "";
     const subject = headers.find((h) => h.name === "Subject")?.value || "";

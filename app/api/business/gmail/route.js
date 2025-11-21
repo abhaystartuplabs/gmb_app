@@ -18,6 +18,7 @@ export async function GET() {
     );
 
     const data = await res.json();
+    console.log("All message Is:-",data)
     return NextResponse.json({ messages: data.messages || [] });
   } catch (err) {
     return NextResponse.json({ error: err.message }, { status: 500 });
