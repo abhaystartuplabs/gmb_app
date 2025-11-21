@@ -13,6 +13,8 @@ export default function GmailPage() {
         const data = await res.json();
         if (!res.ok) throw new Error(data.error || "Failed to fetch emails");
 
+        console.log("data:-",data)
+
         // Fetch details for each message
         const messagesWithDetails = await Promise.all(
           (data.messages || []).map(async (msg) => {
@@ -20,6 +22,8 @@ export default function GmailPage() {
             return await resDetails.json();
           })
         );
+
+        console.log("messagesWithDetails:-",messagesWithDetails)
 
         setMessages(messagesWithDetails);
       } catch (err) {
