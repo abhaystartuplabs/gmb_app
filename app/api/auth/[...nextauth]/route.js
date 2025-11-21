@@ -18,6 +18,7 @@ export const authOptions = {
             "https://www.googleapis.com/auth/business.manage", // ✅ Main My Business scope
             "https://www.googleapis.com/auth/userinfo.profile",
             "https://www.googleapis.com/auth/userinfo.email",
+             "https://www.googleapis.com/auth/gmail.readonly", // ✅ Gmail read-only
             "https://www.googleapis.com/auth/plus.business.manage",
           ].join(" "),
         },
